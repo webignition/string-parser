@@ -107,16 +107,25 @@ abstract class StringParser {
      * @param string $inputString
      * @return string
      */
-    public function parse($inputString) {
+    public function parse($inputString) {        
+        $this->reset();
         $this->inputString = $inputString;
-        $this->inputStringLength = strlen($inputString);
+        $this->inputStringLength = strlen($inputString);        
         
         while ($this->getCurrentCharacterPointer() < $this->getInputStringLength()) {            
             $this->parseCurrentCharacter();
         }
 
         return $this->outputString;
-    }    
+    } 
+    
+    
+    private function reset() {
+        $this->outputString = '';
+        $this->currentCharacterPointer = 0;
+        $this->currentState = self::STATE_UNKNOWN;        
+    }
+    
     
     abstract protected function parseCurrentCharacter();
     
