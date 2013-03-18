@@ -117,7 +117,12 @@ abstract class StringParser {
         }
 
         return $this->outputString;
-    } 
+    }
+    
+    
+    protected function clearOutputString() {
+        $this->outputString = '';
+    }
     
     
     private function reset() {
