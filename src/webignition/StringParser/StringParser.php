@@ -243,5 +243,14 @@ abstract class StringParser {
      */
     protected function isCurrentCharacterLastCharacter() {
         return is_null($this->getNextCharacter());
-    }     
+    }    
+    
+    
+    /**
+     * 
+     * @return string
+     */
+    protected function getInputString() {
+        return $this->inputString;
+    }
 }
