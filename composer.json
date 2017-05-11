@@ -11,10 +11,28 @@
             "email": "jon@webignition.net"
         }
     ],
+    "scripts": {
+        "test": "./vendor/bin/phpunit --colors=always",
+        "cs": "./vendor/bin/phpcs src tests --colors --standard=PSR2",
+        "ci": [
+            "@composer cs",
+            "@composer test"
+        ]
+    },
     "autoload": {
-        "psr-0": { "": "src/" }
-    },    
+        "psr-4": {
+            "webignition\\StringParser\\": "src/",
+            "webignition\\Tests\\StringParser\\": "tests/"
+        }
+    },
     "require": {
-        "php": ">=5.3.0"
-    }      
+        "php": ">=5.3.0",
+        "webignition/disallowed-character-terminated-string": ">=1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "squizlabs/php_codesniffer": "3.*"
+    },
+    "minimum-stability":"stable",
+    "prefer-stable":true
 }
