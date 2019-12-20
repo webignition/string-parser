@@ -10,7 +10,7 @@ use webignition\StringParser\StringParser;
  */
 class PassThroughParser extends StringParser
 {
-    const STATE_IN_VALUE = 1;
+    private const STATE_IN_VALUE = 1;
 
     protected function parseCurrentCharacter(): void
     {
