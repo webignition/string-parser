@@ -1,1 +1,0 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":258:{a:2:{s:7:"defects";a:0:{}s:5:"times";a:2:{s:93:"webignition\StringParser\Tests\ParseThroughParserTest::testPassThroughParser with data set #0";d:0.001;s:93:"webignition\StringParser\Tests\ParseThroughParserTest::testPassThroughParser with data set #1";d:0;}}}

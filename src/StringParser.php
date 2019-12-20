@@ -118,7 +118,7 @@ abstract class StringParser
         $this->currentState = self::STATE_UNKNOWN;
     }
 
-    abstract protected function parseCurrentCharacter();
+    abstract protected function parseCurrentCharacter(): void;
 
     /**
      * Stop parsing
