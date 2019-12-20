@@ -64,7 +64,7 @@ namespace webignition\StringParser;
  */
 abstract class StringParser
 {
-    const STATE_UNKNOWN = 0;
+    protected const STATE_UNKNOWN = 0;
 
     /**
      * @var int
