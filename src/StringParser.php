@@ -41,8 +41,8 @@ namespace webignition\StringParser;
  * - implement a switch statement in parseCurrentCharacter() that takes into
  *   account all states
  *
- * - consider in each state what conditons cause the parser to change to a
- *   different state, or simpy stay in the same state
+ * - consider in each state what conditions cause the parser to change to a
+ *   different state, or simply stay in the same state
  *
  * - consider how an examination of the current, previous and next characters
  *   determine where state changes occur
@@ -72,9 +72,9 @@ abstract class StringParser
     private $currentState = self::STATE_UNKNOWN;
 
     /**
-     * @var string
+     * @var string[]
      */
-    private $inputString;
+    private $inputString = [];
 
     /**
      * @var string
@@ -96,8 +96,11 @@ abstract class StringParser
     public function parse(string $inputString): string
     {
         $this->reset();
-        $this->inputString = $inputString;
-        $this->inputStringLength = strlen($inputString);
+
+        $characters = preg_split('//u', $inputString, -1, PREG_SPLIT_NO_EMPTY);
+
+        $this->inputString = is_array($characters) ? $characters : [];
+        $this->inputStringLength = count($this->inputString);
 
         while ($this->getCurrentCharacterPointer() < $this->getInputStringLength()) {
             $this->parseCurrentCharacter();
@@ -200,6 +203,6 @@ abstract class StringParser
 
     protected function getInputString(): string
     {
-        return $this->inputString;
+        return implode('', $this->inputString);
     }
 }

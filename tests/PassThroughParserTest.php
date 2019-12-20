@@ -22,13 +22,17 @@ class PassThroughParserTest extends \PHPUnit\Framework\TestCase
     public function passThroughParserDataProvider()
     {
         return [
-            [
+            'non-broken ascii' => [
                 'input' => 'foo',
                 'expectedOutput' => 'foo',
             ],
-            [
+            'ascii with whitespace' => [
                 'input' => 'comes out the same as it goes in',
                 'expectedOutput' => 'comes out the same as it goes in',
+            ],
+            'utf8' => [
+                'input' => '输入项',
+                'expectedOutput' => '输入项',
             ]
         ];
     }
