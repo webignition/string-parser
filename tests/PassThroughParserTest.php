@@ -2,7 +2,7 @@
 
 namespace webignition\StringParser\Tests;
 
-class ParseThroughParserTest extends \PHPUnit\Framework\TestCase
+class PassThroughParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider passThroughParserDataProvider
