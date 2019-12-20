@@ -1,10 +1,8 @@
 <?php
 
-namespace webignition\Tests\StringParser;
+namespace webignition\StringParser\Tests;
 
-use PHPUnit_Framework_TestCase;
-
-class ParseThroughParserTest extends PHPUnit_Framework_TestCase
+class ParseThroughParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider passThroughParserDataProvider

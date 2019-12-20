@@ -93,12 +93,7 @@ abstract class StringParser
      */
     private $inputStringLength = 0;
 
-    /**
-     * @param string $inputString
-     *
-     * @return string
-     */
-    public function parse($inputString)
+    public function parse(string $inputString): string
     {
         $this->reset();
         $this->inputString = $inputString;
@@ -111,12 +106,12 @@ abstract class StringParser
         return $this->outputString;
     }
 
-    protected function clearOutputString()
+    protected function clearOutputString(): void
     {
         $this->outputString = '';
     }
 
-    private function reset()
+    private function reset(): void
     {
         $this->outputString = '';
         $this->currentCharacterPointer = 0;
@@ -128,46 +123,34 @@ abstract class StringParser
     /**
      * Stop parsing
      */
-    protected function stop()
+    protected function stop(): void
     {
         $this->currentCharacterPointer = $this->getInputStringLength();
     }
 
-    /**
-     * @return int
-     */
-    protected function getCurrentState()
+    protected function getCurrentState(): int
     {
         return $this->currentState;
     }
 
-    /**
-     * @param int $currentState
-     */
-    protected function setCurrentState($currentState)
+    protected function setCurrentState(int $currentState): void
     {
         $this->currentState = $currentState;
     }
 
-    protected function appendOutputString()
+    protected function appendOutputString(): void
     {
         $this->outputString .= $this->getCurrentCharacter();
     }
 
-    /**
-     * @return string
-     */
-    protected function getCurrentCharacter()
+    protected function getCurrentCharacter(): ?string
     {
         return ($this->getCurrentCharacterPointer() < $this->getInputStringLength())
             ? $this->inputString[$this->getCurrentCharacterPointer()]
             : null;
     }
 
-    /**
-     * @return string
-     */
-    protected function getPreviousCharacter()
+    protected function getPreviousCharacter(): ?string
     {
         if ($this->getCurrentCharacterPointer() == 0) {
             return null;
@@ -179,45 +162,29 @@ abstract class StringParser
             : $this->inputString[$previousCharacterIndex];
     }
 
-    /**
-     * @return string
-     */
-    protected function getNextCharacter()
+    protected function getNextCharacter(): ?string
     {
         return ($this->getCurrentCharacterPointer() == $this->getInputStringLength() - 1)
             ? null
             : $this->inputString[$this->getCurrentCharacterPointer() + 1];
     }
 
-
-    /**
-     * @return int
-     */
-    protected function getInputStringLength()
+    protected function getInputStringLength(): int
     {
         return $this->inputStringLength;
     }
 
-    /**
-     * @return int
-     */
-    protected function getCurrentCharacterPointer()
+    protected function getCurrentCharacterPointer(): int
     {
         return $this->currentCharacterPointer;
     }
 
-    /**
-     * Increment by one the current character pointer
-     */
-    protected function incrementCurrentCharacterPointer()
+    protected function incrementCurrentCharacterPointer(): void
     {
         $this->currentCharacterPointer++;
     }
 
-    /**
-     * @return boolean
-     */
-    protected function isCurrentCharacterFirstCharacter()
+    protected function isCurrentCharacterFirstCharacter(): bool
     {
         if ($this->getCurrentCharacterPointer() != 0) {
             return false;
@@ -226,18 +193,12 @@ abstract class StringParser
         return !is_null($this->getCurrentCharacter());
     }
 
-    /**
-     * @return boolean
-     */
-    protected function isCurrentCharacterLastCharacter()
+    protected function isCurrentCharacterLastCharacter(): bool
     {
         return is_null($this->getNextCharacter());
     }
 
-    /**
-     * @return string
-     */
-    protected function getInputString()
+    protected function getInputString(): string
     {
         return $this->inputString;
     }
