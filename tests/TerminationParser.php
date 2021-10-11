@@ -6,7 +6,7 @@ use webignition\StringParser\StringParser;
 
 /**
  * A simple demonstration parser that does nothing other than parse over and
- * return exactly what it has been given
+ * return exactly what it has been given.
  */
 class TerminationParser extends StringParser
 {
@@ -32,6 +32,7 @@ class TerminationParser extends StringParser
         switch ($this->getCurrentState()) {
             case self::STATE_UNKNOWN:
                 $this->setCurrentState(self::STATE_IN_VALUE);
+
                 break;
 
             case self::STATE_IN_VALUE:

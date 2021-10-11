@@ -60,7 +60,6 @@ namespace webignition\StringParser;
  *
  * - define your states as class constants, make it clear through the constant
  *   name what state you're in
- *
  */
 abstract class StringParser
 {
@@ -82,7 +81,7 @@ abstract class StringParser
     private $outputString;
 
     /**
-     * Pointer to position of current character
+     * Pointer to position of current character.
      *
      * @var int
      */
@@ -114,17 +113,10 @@ abstract class StringParser
         $this->outputString = '';
     }
 
-    private function reset(): void
-    {
-        $this->outputString = '';
-        $this->currentCharacterPointer = 0;
-        $this->currentState = self::STATE_UNKNOWN;
-    }
-
     abstract protected function parseCurrentCharacter(): void;
 
     /**
-     * Stop parsing
+     * Stop parsing.
      */
     protected function stop(): void
     {
@@ -155,11 +147,12 @@ abstract class StringParser
 
     protected function getPreviousCharacter(): ?string
     {
-        if ($this->getCurrentCharacterPointer() == 0) {
+        if (0 == $this->getCurrentCharacterPointer()) {
             return null;
         }
 
         $previousCharacterIndex = $this->getCurrentCharacterPointer() - 1;
+
         return ($previousCharacterIndex > $this->getInputStringLength())
             ? null
             : $this->inputString[$previousCharacterIndex];
@@ -184,12 +177,12 @@ abstract class StringParser
 
     protected function incrementCurrentCharacterPointer(): void
     {
-        $this->currentCharacterPointer++;
+        ++$this->currentCharacterPointer;
     }
 
     protected function isCurrentCharacterFirstCharacter(): bool
     {
-        if ($this->getCurrentCharacterPointer() != 0) {
+        if (0 != $this->getCurrentCharacterPointer()) {
             return false;
         }
 
@@ -204,5 +197,12 @@ abstract class StringParser
     protected function getInputString(): string
     {
         return implode('', $this->inputString);
+    }
+
+    private function reset(): void
+    {
+        $this->outputString = '';
+        $this->currentCharacterPointer = 0;
+        $this->currentState = self::STATE_UNKNOWN;
     }
 }
