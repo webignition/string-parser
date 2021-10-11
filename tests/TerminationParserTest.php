@@ -7,7 +7,7 @@ class TerminationParserTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider terminationParserDataProvider
      */
-    public function testPassThroughParser(string $input, int $limit, string $expectedOutput)
+    public function testPassThroughParser(string $input, int $limit, string $expectedOutput): void
     {
         $parser = new TerminationParser();
         $parser->setLimit($limit);
@@ -16,9 +16,9 @@ class TerminationParserTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
-    public function terminationParserDataProvider()
+    public function terminationParserDataProvider(): array
     {
         return [
             'non-broken ascii' => [

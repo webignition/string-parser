@@ -15,7 +15,7 @@
         "cs-fixer-dry-run": "./vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress none",
         "cs-fixer-fix": "./vendor/bin/php-cs-fixer fix --diff",
         "cs-phpcs": "./vendor/bin/phpcs",
-        "static-analysis": "./vendor/bin/phpstan analyse src tests --level=7",
+        "static-analysis": "./vendor/bin/phpstan",
         "test": "./vendor/bin/phpunit --colors=always",
         "ci": [
             "@composer cs",

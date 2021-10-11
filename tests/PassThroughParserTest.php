@@ -10,16 +10,16 @@ class PassThroughParserTest extends \PHPUnit\Framework\TestCase
      * @param string $input
      * @param string $expectedOutput
      */
-    public function testPassThroughParser($input, $expectedOutput)
+    public function testPassThroughParser($input, $expectedOutput): void
     {
         $parser = new PassThroughParser();
         $this->assertEquals($input, $parser->parse($expectedOutput));
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
-    public function passThroughParserDataProvider()
+    public function passThroughParserDataProvider(): array
     {
         return [
             'non-broken ascii' => [
