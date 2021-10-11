@@ -65,32 +65,21 @@ abstract class StringParser
 {
     protected const STATE_UNKNOWN = 0;
 
-    /**
-     * @var int
-     */
-    private $currentState = self::STATE_UNKNOWN;
+    private int $currentState = self::STATE_UNKNOWN;
 
     /**
      * @var string[]
      */
-    private $inputString = [];
+    private array $inputString = [];
 
-    /**
-     * @var string
-     */
-    private $outputString;
+    private string $outputString;
 
     /**
      * Pointer to position of current character.
-     *
-     * @var int
      */
-    private $currentCharacterPointer = 0;
+    private int $currentCharacterPointer = 0;
 
-    /**
-     * @var int
-     */
-    private $inputStringLength = 0;
+    private int $inputStringLength = 0;
 
     public function parse(string $inputString): string
     {
