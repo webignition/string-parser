@@ -6,11 +6,8 @@ class PassThroughParserTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider passThroughParserDataProvider
-     *
-     * @param string $input
-     * @param string $expectedOutput
      */
-    public function testPassThroughParser($input, $expectedOutput): void
+    public function testPassThroughParser(string $input, string $expectedOutput): void
     {
         $parser = new PassThroughParser();
         $this->assertEquals($input, $parser->parse($expectedOutput));
