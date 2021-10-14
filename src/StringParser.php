@@ -70,7 +70,7 @@ class StringParser
     /**
      * @var string[]
      */
-    private array $inputString = [];
+    private array $characters = [];
 
     private string $output;
 
@@ -95,8 +95,8 @@ class StringParser
 
         $characters = preg_split('//u', $input, -1, PREG_SPLIT_NO_EMPTY);
 
-        $this->inputString = is_array($characters) ? $characters : [];
-        $this->inputLength = count($this->inputString);
+        $this->characters = is_array($characters) ? $characters : [];
+        $this->inputLength = count($this->characters);
 
         while ($this->getCharacterPointer() < $this->getInputLength()) {
             $state = $this->getState();
@@ -153,7 +153,7 @@ class StringParser
     public function getCurrentCharacter(): ?string
     {
         return ($this->getCharacterPointer() < $this->getInputLength())
-            ? $this->inputString[$this->getCharacterPointer()]
+            ? $this->characters[$this->getCharacterPointer()]
             : null;
     }
 
@@ -167,14 +167,14 @@ class StringParser
 
         return ($previousCharacterIndex > $this->getInputLength())
             ? null
-            : $this->inputString[$previousCharacterIndex];
+            : $this->characters[$previousCharacterIndex];
     }
 
     public function getNextCharacter(): ?string
     {
         return ($this->getCharacterPointer() == $this->getInputLength() - 1)
             ? null
-            : $this->inputString[$this->getCharacterPointer() + 1];
+            : $this->characters[$this->getCharacterPointer() + 1];
     }
 
     protected function getInputLength(): int
@@ -206,9 +206,9 @@ class StringParser
         return is_null($this->getNextCharacter());
     }
 
-    protected function getInputString(): string
+    protected function getCharacters(): string
     {
-        return implode('', $this->inputString);
+        return implode('', $this->characters);
     }
 
     private function reset(): void
