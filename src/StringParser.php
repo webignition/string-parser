@@ -31,12 +31,7 @@ class StringParser
     private array $characters = [];
 
     private string $output;
-
-    /**
-     * Pointer to position of current character.
-     */
     private int $pointer = 0;
-
     private int $inputLength = 0;
 
     /**
