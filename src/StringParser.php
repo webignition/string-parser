@@ -95,29 +95,17 @@ class StringParser
 
     public function getCurrentCharacter(): ?string
     {
-        return ($this->pointer < $this->inputLength)
-            ? $this->characters[$this->pointer]
-            : null;
+        return $this->getCharacter($this->pointer);
     }
 
     public function getPreviousCharacter(): ?string
     {
-        if (0 == $this->pointer) {
-            return null;
-        }
-
-        $previousCharacterIndex = $this->pointer - 1;
-
-        return ($previousCharacterIndex > $this->inputLength)
-            ? null
-            : $this->characters[$previousCharacterIndex];
+        return $this->getCharacter($this->pointer - 1);
     }
 
     public function getNextCharacter(): ?string
     {
-        return ($this->pointer == $this->inputLength - 1)
-            ? null
-            : $this->characters[$this->pointer + 1];
+        return $this->getCharacter($this->pointer + 1);
     }
 
     public function getPointer(): int
@@ -147,6 +135,11 @@ class StringParser
     public function getInput(): string
     {
         return implode('', $this->characters);
+    }
+
+    private function getCharacter(int $index): ?string
+    {
+        return $this->characters[$index] ?? null;
     }
 
     private function reset(): void
