@@ -2,49 +2,41 @@
 
 namespace webignition\StringParser\Tests;
 
-use webignition\StringParser\StringParser;
+use webignition\StringParser\ConcreteStringParser;
 
 /**
- * A simple demonstration parser that does nothing other than parse over and
- * return exactly what it has been given.
+ * A demonstration parser that returns exactly what is has been given up to a chosen character limit.
  */
-class TerminationParser extends StringParser
+class TerminationParser
 {
     private const STATE_IN_VALUE = 1;
 
-    /**
-     * @var int
-     */
-    private $limit = 10;
+    private ConcreteStringParser $stringParser;
+    private int $count = 0;
 
-    /**
-     * @var int
-     */
-    private $count = 0;
-
-    public function setLimit(int $limit): void
-    {
-        $this->limit = $limit;
-    }
-
-    protected function parseCurrentCharacter(): void
-    {
-        switch ($this->getCurrentState()) {
-            case self::STATE_UNKNOWN:
-                $this->setCurrentState(self::STATE_IN_VALUE);
-
-                break;
-
-            case self::STATE_IN_VALUE:
+    public function __construct(
+        private int $limit = 10,
+    ) {
+        $this->stringParser = new ConcreteStringParser([
+            ConcreteStringParser::STATE_UNKNOWN => function (ConcreteStringParser $stringParser) {
+                $stringParser->setCurrentState(self::STATE_IN_VALUE);
+            },
+            self::STATE_IN_VALUE => function (ConcreteStringParser $stringParser) {
                 $this->count++;
 
                 if ($this->count <= $this->limit) {
-                    $this->appendOutputString();
+                    $stringParser->appendOutputString();
                 }
 
-                $this->incrementCurrentCharacterPointer();
+                $stringParser->incrementCurrentCharacterPointer();
+            },
+        ]);
+    }
 
-                break;
-        }
+    public function parse(string $input): string
+    {
+        $this->count = 0;
+
+        return $this->stringParser->parse($input);
     }
 }
