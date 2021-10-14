@@ -18,7 +18,7 @@ class PassThroughParser
     {
         $this->stringParser = new StringParser([
             StringParser::STATE_UNKNOWN => function (StringParser $stringParser) {
-                $stringParser->setCurrentState(self::STATE_IN_VALUE);
+                $stringParser->setState(self::STATE_IN_VALUE);
             },
             self::STATE_IN_VALUE => function (StringParser $stringParser) {
                 $stringParser->appendOutputString();

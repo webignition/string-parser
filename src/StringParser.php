@@ -65,7 +65,7 @@ class StringParser
 {
     public const STATE_UNKNOWN = 0;
 
-    private int $currentState = self::STATE_UNKNOWN;
+    private int $state = self::STATE_UNKNOWN;
 
     /**
      * @var string[]
@@ -99,7 +99,7 @@ class StringParser
         $this->inputStringLength = count($this->inputString);
 
         while ($this->getCurrentCharacterPointer() < $this->getInputStringLength()) {
-            $state = $this->getCurrentState();
+            $state = $this->getState();
             $handler = $this->findHandler($state);
 
             if (null === $handler) {
@@ -135,14 +135,14 @@ class StringParser
         $this->currentCharacterPointer = $this->getInputStringLength();
     }
 
-    protected function getCurrentState(): int
+    protected function getState(): int
     {
-        return $this->currentState;
+        return $this->state;
     }
 
-    public function setCurrentState(int $currentState): void
+    public function setState(int $state): void
     {
-        $this->currentState = $currentState;
+        $this->state = $state;
     }
 
     public function appendOutputString(): void
@@ -215,6 +215,6 @@ class StringParser
     {
         $this->outputString = '';
         $this->currentCharacterPointer = 0;
-        $this->currentState = self::STATE_UNKNOWN;
+        $this->state = self::STATE_UNKNOWN;
     }
 }
