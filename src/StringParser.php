@@ -89,6 +89,9 @@ class StringParser
     ) {
     }
 
+    /**
+     * @throws UnknownStateException
+     */
     public function parse(string $input): string
     {
         $this->reset();
@@ -102,8 +105,7 @@ class StringParser
             $handler = $this->findHandler($this->state);
 
             if (null === $handler) {
-                var_dump('Unhandled ' . $this->state);
-                exit();
+                throw new UnknownStateException($this->state);
             }
 
             if ($handler instanceof \Closure) {
