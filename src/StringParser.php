@@ -89,11 +89,11 @@ class StringParser
     ) {
     }
 
-    public function parse(string $inputString): string
+    public function parse(string $input): string
     {
         $this->reset();
 
-        $characters = preg_split('//u', $inputString, -1, PREG_SPLIT_NO_EMPTY);
+        $characters = preg_split('//u', $input, -1, PREG_SPLIT_NO_EMPTY);
 
         $this->inputString = is_array($characters) ? $characters : [];
         $this->inputStringLength = count($this->inputString);
