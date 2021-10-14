@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace webignition\StringParser\Tests\Unit;
 
 use webignition\StringParser\StringParser;
