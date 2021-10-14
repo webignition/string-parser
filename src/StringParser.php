@@ -176,7 +176,7 @@ class StringParser
         return $this->pointer;
     }
 
-    public function incrementCurrentCharacterPointer(): void
+    public function incrementPointer(): void
     {
         ++$this->pointer;
     }

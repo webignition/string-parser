@@ -28,7 +28,7 @@ class TerminationParser
                     $stringParser->appendOutputString();
                 }
 
-                $stringParser->incrementCurrentCharacterPointer();
+                $stringParser->incrementPointer();
             },
         ]);
     }

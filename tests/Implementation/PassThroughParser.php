@@ -22,7 +22,7 @@ class PassThroughParser
             },
             self::STATE_IN_VALUE => function (StringParser $stringParser) {
                 $stringParser->appendOutputString();
-                $stringParser->incrementCurrentCharacterPointer();
+                $stringParser->incrementPointer();
             },
         ]);
     }
