@@ -102,8 +102,7 @@ class StringParser
         $this->inputLength = count($this->characters);
 
         while ($this->pointer < $this->inputLength) {
-            $handler = $this->findHandler($this->state);
-
+            $handler = $this->handlers[$this->state] ?? null;
             if (null === $handler) {
                 throw new UnknownStateException($this->state);
             }
@@ -114,11 +113,6 @@ class StringParser
         }
 
         return $this->output;
-    }
-
-    private function findHandler(int $state): ?callable
-    {
-        return $this->handlers[$state] ?? null;
     }
 
     public function clearOutput(): void
