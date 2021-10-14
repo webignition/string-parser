@@ -79,7 +79,7 @@ class StringParser
      */
     private int $characterPointer = 0;
 
-    private int $inputStringLength = 0;
+    private int $inputLength = 0;
 
     /**
      * @param \Closure[] $handlers
@@ -96,9 +96,9 @@ class StringParser
         $characters = preg_split('//u', $input, -1, PREG_SPLIT_NO_EMPTY);
 
         $this->inputString = is_array($characters) ? $characters : [];
-        $this->inputStringLength = count($this->inputString);
+        $this->inputLength = count($this->inputString);
 
-        while ($this->getCharacterPointer() < $this->getInputStringLength()) {
+        while ($this->getCharacterPointer() < $this->getInputLength()) {
             $state = $this->getState();
             $handler = $this->findHandler($state);
 
@@ -132,7 +132,7 @@ class StringParser
      */
     protected function stop(): void
     {
-        $this->characterPointer = $this->getInputStringLength();
+        $this->characterPointer = $this->getInputLength();
     }
 
     protected function getState(): int
@@ -152,7 +152,7 @@ class StringParser
 
     public function getCurrentCharacter(): ?string
     {
-        return ($this->getCharacterPointer() < $this->getInputStringLength())
+        return ($this->getCharacterPointer() < $this->getInputLength())
             ? $this->inputString[$this->getCharacterPointer()]
             : null;
     }
@@ -165,21 +165,21 @@ class StringParser
 
         $previousCharacterIndex = $this->getCharacterPointer() - 1;
 
-        return ($previousCharacterIndex > $this->getInputStringLength())
+        return ($previousCharacterIndex > $this->getInputLength())
             ? null
             : $this->inputString[$previousCharacterIndex];
     }
 
     public function getNextCharacter(): ?string
     {
-        return ($this->getCharacterPointer() == $this->getInputStringLength() - 1)
+        return ($this->getCharacterPointer() == $this->getInputLength() - 1)
             ? null
             : $this->inputString[$this->getCharacterPointer() + 1];
     }
 
-    protected function getInputStringLength(): int
+    protected function getInputLength(): int
     {
-        return $this->inputStringLength;
+        return $this->inputLength;
     }
 
     public function getCharacterPointer(): int
