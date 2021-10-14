@@ -2,7 +2,7 @@
 
 namespace webignition\StringParser\Tests;
 
-use webignition\StringParser\ConcreteStringParser;
+use webignition\StringParser\StringParser;
 
 /**
  * A simple demonstration parser that does nothing other than parse over and
@@ -12,15 +12,15 @@ class PassThroughParser
 {
     private const STATE_IN_VALUE = 1;
 
-    private ConcreteStringParser $stringParser;
+    private StringParser $stringParser;
 
     public function __construct()
     {
-        $this->stringParser = new ConcreteStringParser([
-            ConcreteStringParser::STATE_UNKNOWN => function (ConcreteStringParser $stringParser) {
+        $this->stringParser = new StringParser([
+            StringParser::STATE_UNKNOWN => function (StringParser $stringParser) {
                 $stringParser->setCurrentState(self::STATE_IN_VALUE);
             },
-            self::STATE_IN_VALUE => function (ConcreteStringParser $stringParser) {
+            self::STATE_IN_VALUE => function (StringParser $stringParser) {
                 $stringParser->appendOutputString();
                 $stringParser->incrementCurrentCharacterPointer();
             },

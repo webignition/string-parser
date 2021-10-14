@@ -61,9 +61,9 @@ namespace webignition\StringParser;
  * - define your states as class constants, make it clear through the constant
  *   name what state you're in
  */
-abstract class StringParser
+class StringParser
 {
-    protected const STATE_UNKNOWN = 0;
+    public const STATE_UNKNOWN = 0;
 
     private int $currentState = self::STATE_UNKNOWN;
 
@@ -81,6 +81,14 @@ abstract class StringParser
 
     private int $inputStringLength = 0;
 
+    /**
+     * @param \Closure[] $handlers
+     */
+    public function __construct(
+        private array $handlers
+    ) {
+    }
+
     public function parse(string $inputString): string
     {
         $this->reset();
@@ -91,10 +99,25 @@ abstract class StringParser
         $this->inputStringLength = count($this->inputString);
 
         while ($this->getCurrentCharacterPointer() < $this->getInputStringLength()) {
-            $this->parseCurrentCharacter();
+            $state = $this->getCurrentState();
+            $handler = $this->findHandler($state);
+
+            if (null === $handler) {
+                var_dump('Unhandled ' . $state);
+                exit();
+            }
+
+            if ($handler instanceof \Closure) {
+                ($handler)($this);
+            }
         }
 
         return $this->outputString;
+    }
+
+    private function findHandler(int $state): ?callable
+    {
+        return $this->handlers[$state] ?? null;
     }
 
     protected function clearOutputString(): void
@@ -102,7 +125,7 @@ abstract class StringParser
         $this->outputString = '';
     }
 
-    abstract protected function parseCurrentCharacter(): void;
+//    abstract protected function parseCurrentCharacter(): void;
 
     /**
      * Stop parsing.
@@ -117,24 +140,24 @@ abstract class StringParser
         return $this->currentState;
     }
 
-    protected function setCurrentState(int $currentState): void
+    public function setCurrentState(int $currentState): void
     {
         $this->currentState = $currentState;
     }
 
-    protected function appendOutputString(): void
+    public function appendOutputString(): void
     {
         $this->outputString .= $this->getCurrentCharacter();
     }
 
-    protected function getCurrentCharacter(): ?string
+    public function getCurrentCharacter(): ?string
     {
         return ($this->getCurrentCharacterPointer() < $this->getInputStringLength())
             ? $this->inputString[$this->getCurrentCharacterPointer()]
             : null;
     }
 
-    protected function getPreviousCharacter(): ?string
+    public function getPreviousCharacter(): ?string
     {
         if (0 == $this->getCurrentCharacterPointer()) {
             return null;
@@ -147,7 +170,7 @@ abstract class StringParser
             : $this->inputString[$previousCharacterIndex];
     }
 
-    protected function getNextCharacter(): ?string
+    public function getNextCharacter(): ?string
     {
         return ($this->getCurrentCharacterPointer() == $this->getInputStringLength() - 1)
             ? null
@@ -159,17 +182,17 @@ abstract class StringParser
         return $this->inputStringLength;
     }
 
-    protected function getCurrentCharacterPointer(): int
+    public function getCurrentCharacterPointer(): int
     {
         return $this->currentCharacterPointer;
     }
 
-    protected function incrementCurrentCharacterPointer(): void
+    public function incrementCurrentCharacterPointer(): void
     {
         ++$this->currentCharacterPointer;
     }
 
-    protected function isCurrentCharacterFirstCharacter(): bool
+    public function isCurrentCharacterFirstCharacter(): bool
     {
         if (0 != $this->getCurrentCharacterPointer()) {
             return false;
@@ -178,7 +201,7 @@ abstract class StringParser
         return !is_null($this->getCurrentCharacter());
     }
 
-    protected function isCurrentCharacterLastCharacter(): bool
+    public function isCurrentCharacterLastCharacter(): bool
     {
         return is_null($this->getNextCharacter());
     }
