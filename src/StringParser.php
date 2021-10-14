@@ -3,63 +3,21 @@
 namespace webignition\StringParser;
 
 /**
- * Abstract parser for parsing a string one character at a time, taking an input
- * string and returning an output string.
+ * Parses a string one character at a time.
  *
- * The parser is state-based and provides a default state of 0 (STATE_UNKNOWN).
+ * Implemented as an integer-based state machine starting at state zero (self::STATE_UNNKNOWN).
  *
- * Loops indefinitely until the current character pointer reaches the end of the
- * string, unless an exception breaks the flow.
+ * What to do as the input is parsed is dealt with by a collection of handlers passed into the constructor.
+ * Each handler is a callable that is passed the current StringParser instance. This allows a handler to examine
+ * the current/previous/next character and the character pointer and to set the state.
  *
- * Concrete classes must implement parseCurrentCharacter() and in this method
- * must decide, based on the current state, the current character and the
- * characters surrounding it, whether to add the current character to the output,
- * whether to increment the current character pointer and whether to change the
- * current state.
+ * What happens within a handler is up to the implementation. Commonly a handler will perform some logic to determine
+ * if parsing should continue and possibly:
+ *  - append the current character to the output
+ *  - increment the pointer to move on to the next character
+ *  - set the state to invoke a different handler for the continuing characters
  *
- * Within parseCurrentCharacter(), make good use of:
- *
- * - getCurrentState(): you might want to create a switch statement to behave
- *                     dependent on the state
- *
- * - getCurrentCharacter()
- * - getPreviousCharacter()
- * - getNextCharacter()
- * - getCurrentCharacterPointer()
- * - incrementCurrentCharacterPointer()
- * - setCurrentState()
- * - isCurrentCharacterFirstCharacter()
- * - stop(): if you're done all you need to, stop the parser
- *
- * Concrete class implementation thoughts:
- *
- * - consider what states your parser can be in, what are all the possible
- *   situations you could encounter when parsing a particular type of string?
- *
- * - list all states
- *
- * - implement a switch statement in parseCurrentCharacter() that takes into
- *   account all states
- *
- * - consider in each state what conditions cause the parser to change to a
- *   different state, or simply stay in the same state
- *
- * - consider how an examination of the current, previous and next characters
- *   determine where state changes occur
- *
- * - consider in which states you want to append the current character to what is
- *   to be output
- *
- * - consider what states are invalid, and in those states throw exceptions
- *
- * - don't assume you're starting in a valid state, make use of the initial
- *   'unknown' state and figure out what state you're in
- *
- * - override the parse() method if you want to return not a string but perhaps
- *   an object instantiated from the parsed string
- *
- * - define your states as class constants, make it clear through the constant
- *   name what state you're in
+ * Refer to tests/Implementation/*Parser.php for examples of simple reference implementations.
  */
 class StringParser
 {
