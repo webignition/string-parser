@@ -1,197 +1,153 @@
 <?php
 
+declare(strict_types=1);
+
 namespace webignition\StringParser;
 
 /**
- * Abstract parser for parsing a string one character at a time, taking an input
- * string and returning an output string.
+ * Parses a string one character at a time.
  *
- * The parser is state-based and provides a default state of 0 (STATE_UNKNOWN).
+ * Implemented as an integer-based state machine starting at state zero (self::STATE_UNNKNOWN).
  *
- * Loops indefinitely until the current character pointer reaches the end of the
- * string, unless an exception breaks the flow.
+ * What to do as the input is parsed is dealt with by a collection of handlers passed into the constructor.
+ * Each handler is a callable that is passed the current StringParser instance. This allows a handler to examine
+ * the current/previous/next character and the character pointer and to set the state.
  *
- * Concrete classes must implement parseCurrentCharacter() and in this method
- * must decide, based on the current state, the current character and the
- * characters surrounding it, whether to add the current character to the output,
- * whether to increment the current character pointer and whether to change the
- * current state.
+ * What happens within a handler is up to the implementation. Commonly a handler will perform some logic to determine
+ * if parsing should continue and possibly:
+ *  - append the current character to the output
+ *  - increment the pointer to move on to the next character
+ *  - set the state to invoke a different handler for the continuing characters
  *
- * Within parseCurrentCharacter(), make good use of:
- *
- * - getCurrentState(): you might want to create a switch statement to behave
- *                     dependent on the state
- *
- * - getCurrentCharacter()
- * - getPreviousCharacter()
- * - getNextCharacter()
- * - getCurrentCharacterPointer()
- * - incrementCurrentCharacterPointer()
- * - setCurrentState()
- * - isCurrentCharacterFirstCharacter()
- * - stop(): if you're done all you need to, stop the parser
- *
- * Concrete class implementation thoughts:
- *
- * - consider what states your parser can be in, what are all the possible
- *   situations you could encounter when parsing a particular type of string?
- *
- * - list all states
- *
- * - implement a switch statement in parseCurrentCharacter() that takes into
- *   account all states
- *
- * - consider in each state what conditions cause the parser to change to a
- *   different state, or simply stay in the same state
- *
- * - consider how an examination of the current, previous and next characters
- *   determine where state changes occur
- *
- * - consider in which states you want to append the current character to what is
- *   to be output
- *
- * - consider what states are invalid, and in those states throw exceptions
- *
- * - don't assume you're starting in a valid state, make use of the initial
- *   'unknown' state and figure out what state you're in
- *
- * - override the parse() method if you want to return not a string but perhaps
- *   an object instantiated from the parsed string
- *
- * - define your states as class constants, make it clear through the constant
- *   name what state you're in
+ * Refer to tests/Implementation/*Parser.php for examples of simple reference implementations.
  */
-abstract class StringParser
+class StringParser
 {
-    protected const STATE_UNKNOWN = 0;
+    public const STATE_UNKNOWN = 0;
 
-    private int $currentState = self::STATE_UNKNOWN;
+    private int $state = self::STATE_UNKNOWN;
 
     /**
      * @var string[]
      */
-    private array $inputString = [];
+    private array $characters = [];
 
-    private string $outputString;
+    private string $output;
+    private int $pointer = 0;
+    private int $inputLength = 0;
 
     /**
-     * Pointer to position of current character.
+     * @param \Closure[] $handlers
      */
-    private int $currentCharacterPointer = 0;
+    public function __construct(
+        private array $handlers
+    ) {
+    }
 
-    private int $inputStringLength = 0;
-
-    public function parse(string $inputString): string
+    /**
+     * @throws UnknownStateException
+     */
+    public function parse(string $input): string
     {
         $this->reset();
 
-        $characters = preg_split('//u', $inputString, -1, PREG_SPLIT_NO_EMPTY);
+        $characters = preg_split('//u', $input, -1, PREG_SPLIT_NO_EMPTY);
 
-        $this->inputString = is_array($characters) ? $characters : [];
-        $this->inputStringLength = count($this->inputString);
+        $this->characters = is_array($characters) ? $characters : [];
+        $this->inputLength = count($this->characters);
 
-        while ($this->getCurrentCharacterPointer() < $this->getInputStringLength()) {
-            $this->parseCurrentCharacter();
+        while ($this->pointer < $this->inputLength) {
+            $handler = $this->handlers[$this->state] ?? null;
+            if (null === $handler) {
+                throw new UnknownStateException($this->state);
+            }
+
+            if ($handler instanceof \Closure) {
+                ($handler)($this);
+            }
         }
 
-        return $this->outputString;
+        return $this->output;
     }
 
-    protected function clearOutputString(): void
+    public function clearOutput(): void
     {
-        $this->outputString = '';
+        $this->output = '';
     }
 
-    abstract protected function parseCurrentCharacter(): void;
-
-    /**
-     * Stop parsing.
-     */
-    protected function stop(): void
+    public function stop(): void
     {
-        $this->currentCharacterPointer = $this->getInputStringLength();
+        $this->pointer = $this->inputLength;
     }
 
-    protected function getCurrentState(): int
+    public function getState(): int
     {
-        return $this->currentState;
+        return $this->state;
     }
 
-    protected function setCurrentState(int $currentState): void
+    public function setState(int $state): void
     {
-        $this->currentState = $currentState;
+        $this->state = $state;
     }
 
-    protected function appendOutputString(): void
+    public function appendOutputString(): void
     {
-        $this->outputString .= $this->getCurrentCharacter();
+        $this->output .= $this->getCurrentCharacter();
     }
 
-    protected function getCurrentCharacter(): ?string
+    public function getCurrentCharacter(): ?string
     {
-        return ($this->getCurrentCharacterPointer() < $this->getInputStringLength())
-            ? $this->inputString[$this->getCurrentCharacterPointer()]
-            : null;
+        return $this->getCharacter($this->pointer);
     }
 
-    protected function getPreviousCharacter(): ?string
+    public function getPreviousCharacter(): ?string
     {
-        if (0 == $this->getCurrentCharacterPointer()) {
-            return null;
-        }
-
-        $previousCharacterIndex = $this->getCurrentCharacterPointer() - 1;
-
-        return ($previousCharacterIndex > $this->getInputStringLength())
-            ? null
-            : $this->inputString[$previousCharacterIndex];
+        return $this->getCharacter($this->pointer - 1);
     }
 
-    protected function getNextCharacter(): ?string
+    public function getNextCharacter(): ?string
     {
-        return ($this->getCurrentCharacterPointer() == $this->getInputStringLength() - 1)
-            ? null
-            : $this->inputString[$this->getCurrentCharacterPointer() + 1];
+        return $this->getCharacter($this->pointer + 1);
     }
 
-    protected function getInputStringLength(): int
+    public function getPointer(): int
     {
-        return $this->inputStringLength;
+        return $this->pointer;
     }
 
-    protected function getCurrentCharacterPointer(): int
+    public function incrementPointer(): void
     {
-        return $this->currentCharacterPointer;
+        ++$this->pointer;
     }
 
-    protected function incrementCurrentCharacterPointer(): void
+    public function isCurrentCharacterFirstCharacter(): bool
     {
-        ++$this->currentCharacterPointer;
-    }
-
-    protected function isCurrentCharacterFirstCharacter(): bool
-    {
-        if (0 != $this->getCurrentCharacterPointer()) {
+        if (0 != $this->pointer) {
             return false;
         }
 
         return !is_null($this->getCurrentCharacter());
     }
 
-    protected function isCurrentCharacterLastCharacter(): bool
+    public function isCurrentCharacterLastCharacter(): bool
     {
         return is_null($this->getNextCharacter());
     }
 
-    protected function getInputString(): string
+    public function getInput(): string
     {
-        return implode('', $this->inputString);
+        return implode('', $this->characters);
+    }
+
+    private function getCharacter(int $index): ?string
+    {
+        return $this->characters[$index] ?? null;
     }
 
     private function reset(): void
     {
-        $this->outputString = '';
-        $this->currentCharacterPointer = 0;
-        $this->currentState = self::STATE_UNKNOWN;
+        $this->output = '';
+        $this->pointer = 0;
+        $this->state = self::STATE_UNKNOWN;
     }
 }

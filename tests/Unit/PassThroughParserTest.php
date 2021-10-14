@@ -1,6 +1,10 @@
 <?php
 
-namespace webignition\StringParser\Tests;
+declare(strict_types=1);
+
+namespace webignition\StringParser\Tests\Unit;
+
+use webignition\StringParser\Tests\Implementation\PassThroughParser;
 
 class PassThroughParserTest extends \PHPUnit\Framework\TestCase
 {

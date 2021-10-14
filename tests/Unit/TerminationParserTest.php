@@ -1,6 +1,10 @@
 <?php
 
-namespace webignition\StringParser\Tests;
+declare(strict_types=1);
+
+namespace webignition\StringParser\Tests\Unit;
+
+use webignition\StringParser\Tests\Implementation\TerminationParser;
 
 class TerminationParserTest extends \PHPUnit\Framework\TestCase
 {
@@ -9,8 +13,7 @@ class TerminationParserTest extends \PHPUnit\Framework\TestCase
      */
     public function testPassThroughParser(string $input, int $limit, string $expectedOutput): void
     {
-        $parser = new TerminationParser();
-        $parser->setLimit($limit);
+        $parser = new TerminationParser($limit);
 
         $this->assertEquals($expectedOutput, $parser->parse($input));
     }

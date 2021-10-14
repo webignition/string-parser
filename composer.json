@@ -12,8 +12,8 @@
         }
     ],
     "scripts": {
-        "cs-fixer-dry-run": "./vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress none",
-        "cs-fixer-fix": "./vendor/bin/php-cs-fixer fix --diff",
+        "cs-fixer-dry-run": "./vendor/bin/php-cs-fixer fix --dry-run --verbose --show-progress none --allow-risky=yes",
+        "cs-fixer-fix": "./vendor/bin/php-cs-fixer fix --diff --allow-risky=yes",
         "cs-phpcs": "./vendor/bin/phpcs",
         "static-analysis": "./vendor/bin/phpstan",
         "test": "./vendor/bin/phpunit --colors=always",

@@ -1,4 +1,4 @@
 string-parser
 =============
 
-PHP abstract state-based string parser
+PHP state-based string parser
