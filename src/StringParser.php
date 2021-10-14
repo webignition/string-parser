@@ -99,11 +99,10 @@ class StringParser
         $this->inputLength = count($this->characters);
 
         while ($this->getPointer() < $this->getInputLength()) {
-            $state = $this->getState();
-            $handler = $this->findHandler($state);
+            $handler = $this->findHandler($this->state);
 
             if (null === $handler) {
-                var_dump('Unhandled ' . $state);
+                var_dump('Unhandled ' . $this->state);
                 exit();
             }
 
@@ -120,17 +119,12 @@ class StringParser
         return $this->handlers[$state] ?? null;
     }
 
-    protected function clearOutputString(): void
+    public function clearOutput(): void
     {
         $this->output = '';
     }
 
-//    abstract protected function parseCurrentCharacter(): void;
-
-    /**
-     * Stop parsing.
-     */
-    protected function stop(): void
+    public function stop(): void
     {
         $this->pointer = $this->getInputLength();
     }
