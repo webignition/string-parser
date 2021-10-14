@@ -1,6 +1,8 @@
 <?php
 
-namespace webignition\StringParser\Tests;
+namespace webignition\StringParser\Tests\Unit;
+
+use webignition\StringParser\Tests\Implementation\TerminationParser;
 
 class TerminationParserTest extends \PHPUnit\Framework\TestCase
 {

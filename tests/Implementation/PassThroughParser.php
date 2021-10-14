@@ -1,6 +1,6 @@
 <?php
 
-namespace webignition\StringParser\Tests;
+namespace webignition\StringParser\Tests\Implementation;
 
 use webignition\StringParser\StringParser;
 
