@@ -98,7 +98,7 @@ class StringParser
         $this->characters = is_array($characters) ? $characters : [];
         $this->inputLength = count($this->characters);
 
-        while ($this->getPointer() < $this->getInputLength()) {
+        while ($this->pointer < $this->inputLength) {
             $handler = $this->findHandler($this->state);
 
             if (null === $handler) {
@@ -126,10 +126,10 @@ class StringParser
 
     public function stop(): void
     {
-        $this->pointer = $this->getInputLength();
+        $this->pointer = $this->inputLength;
     }
 
-    protected function getState(): int
+    public function getState(): int
     {
         return $this->state;
     }
@@ -146,34 +146,29 @@ class StringParser
 
     public function getCurrentCharacter(): ?string
     {
-        return ($this->getPointer() < $this->getInputLength())
-            ? $this->characters[$this->getPointer()]
+        return ($this->pointer < $this->inputLength)
+            ? $this->characters[$this->pointer]
             : null;
     }
 
     public function getPreviousCharacter(): ?string
     {
-        if (0 == $this->getPointer()) {
+        if (0 == $this->pointer) {
             return null;
         }
 
-        $previousCharacterIndex = $this->getPointer() - 1;
+        $previousCharacterIndex = $this->pointer - 1;
 
-        return ($previousCharacterIndex > $this->getInputLength())
+        return ($previousCharacterIndex > $this->inputLength)
             ? null
             : $this->characters[$previousCharacterIndex];
     }
 
     public function getNextCharacter(): ?string
     {
-        return ($this->getPointer() == $this->getInputLength() - 1)
+        return ($this->pointer == $this->inputLength - 1)
             ? null
-            : $this->characters[$this->getPointer() + 1];
-    }
-
-    protected function getInputLength(): int
-    {
-        return $this->inputLength;
+            : $this->characters[$this->pointer + 1];
     }
 
     public function getPointer(): int
@@ -188,7 +183,7 @@ class StringParser
 
     public function isCurrentCharacterFirstCharacter(): bool
     {
-        if (0 != $this->getPointer()) {
+        if (0 != $this->pointer) {
             return false;
         }
 
