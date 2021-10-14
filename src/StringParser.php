@@ -72,7 +72,7 @@ class StringParser
      */
     private array $inputString = [];
 
-    private string $outputString;
+    private string $output;
 
     /**
      * Pointer to position of current character.
@@ -112,7 +112,7 @@ class StringParser
             }
         }
 
-        return $this->outputString;
+        return $this->output;
     }
 
     private function findHandler(int $state): ?callable
@@ -122,7 +122,7 @@ class StringParser
 
     protected function clearOutputString(): void
     {
-        $this->outputString = '';
+        $this->output = '';
     }
 
 //    abstract protected function parseCurrentCharacter(): void;
@@ -147,7 +147,7 @@ class StringParser
 
     public function appendOutputString(): void
     {
-        $this->outputString .= $this->getCurrentCharacter();
+        $this->output .= $this->getCurrentCharacter();
     }
 
     public function getCurrentCharacter(): ?string
@@ -213,7 +213,7 @@ class StringParser
 
     private function reset(): void
     {
-        $this->outputString = '';
+        $this->output = '';
         $this->characterPointer = 0;
         $this->state = self::STATE_UNKNOWN;
     }
