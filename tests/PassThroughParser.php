@@ -2,29 +2,33 @@
 
 namespace webignition\StringParser\Tests;
 
-use webignition\StringParser\StringParser;
+use webignition\StringParser\ConcreteStringParser;
 
 /**
  * A simple demonstration parser that does nothing other than parse over and
  * return exactly what it has been given.
  */
-class PassThroughParser extends StringParser
+class PassThroughParser
 {
     private const STATE_IN_VALUE = 1;
 
-    protected function parseCurrentCharacter(): void
+    private ConcreteStringParser $stringParser;
+
+    public function __construct()
     {
-        switch ($this->getCurrentState()) {
-            case self::STATE_UNKNOWN:
-                $this->setCurrentState(self::STATE_IN_VALUE);
+        $this->stringParser = new ConcreteStringParser([
+            ConcreteStringParser::STATE_UNKNOWN => function (ConcreteStringParser $stringParser) {
+                $stringParser->setCurrentState(self::STATE_IN_VALUE);
+            },
+            self::STATE_IN_VALUE => function (ConcreteStringParser $stringParser) {
+                $stringParser->appendOutputString();
+                $stringParser->incrementCurrentCharacterPointer();
+            },
+        ]);
+    }
 
-                break;
-
-            case self::STATE_IN_VALUE:
-                    $this->appendOutputString();
-                    $this->incrementCurrentCharacterPointer();
-
-                break;
-        }
+    public function parse(string $input): string
+    {
+        return $this->stringParser->parse($input);
     }
 }
