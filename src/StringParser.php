@@ -195,7 +195,7 @@ class StringParser
         return is_null($this->getNextCharacter());
     }
 
-    protected function getCharacters(): string
+    public function getInput(): string
     {
         return implode('', $this->characters);
     }
