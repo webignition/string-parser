@@ -22,7 +22,7 @@ class TerminationParser
                 $stringParser->setState(self::STATE_IN_VALUE);
             },
             self::STATE_IN_VALUE => function (StringParser $stringParser) {
-                $this->count++;
+                ++$this->count;
 
                 if ($this->count <= $this->limit) {
                     $stringParser->appendOutputString();
